@@ -8,15 +8,16 @@ import UserInput from "../Components/auth/UserInput";
 import SubmitButton from "../Components/auth/submitButton";
 import Logo from "../Components/auth/Logo";
 
-const SignIn = ({ navigation }) => {
+const SignUp = ({ navigation }) => {
   const [values, setValues] = useState({
+    name: "Okeke Dumaga",
     email: "okekedumaga10@gmail.com",
     password: "sjsnsksksks",
   });
 
   const [loading, setLoading] = useState(false);
 
-  const { email, password } = values;
+  const { name, email, password } = values;
 
   const onChange = (text, name) => {
     // const { value } = event.target;
@@ -28,21 +29,22 @@ const SignIn = ({ navigation }) => {
   const handleSubmit = async () => {
     setLoading(true);
 
-    if (!email || !password) {
+    if (!name || !email || !password) {
       alert("All fields are required");
       setLoading(false);
       return;
     }
 
-    console.log("DATA IS =>", email, password);
+    console.log("DATA IS =>", name, email, password);
     setLoading(false);
     try {
       const data = await axios.post("http://localHost:8000/api", {
+        name: name,
         email,
         password,
       });
 
-      alert("YOUR DATA IS FOUND MY NIGGA");
+      alert("YOUR DATA IS IN MY NIGGA");
       console.log("SUCCESS =>", data);
       setLoading(false);
     } catch (err) {
@@ -52,13 +54,21 @@ const SignIn = ({ navigation }) => {
   };
 
   return (
-    <ScrollView contentContainerStyle={signin.container}>
+    <ScrollView contentContainerStyle={signup.container}>
       <Logo />
       <Text title center>
         {" "}
-        SIGN IN
+        SIGN UP
       </Text>
 
+      <UserInput
+        label={"Name"}
+        name={"name"}
+        value={name}
+        onChange={onChange}
+        autoCapitalize={"words"}
+        autoCorrect={false}
+      />
       <UserInput
         label={"Email"}
         name={"email"}
@@ -85,28 +95,24 @@ const SignIn = ({ navigation }) => {
       {/* <Text>{JSON.stringify({ name, email, password }, null, 4)}</Text> */}
 
       <Text small center>
-        Create An Account?
-        <Text
-          color="grey"
-          small
-          center
-          onPress={() => {
-            navigation.navigation("Signup");
-          }}
-        >
-          {" "}
-          Sign Up
-        </Text>
+        Already Joined?
       </Text>
-      <Text color="grey" small center>
+      <Text
+        color="grey"
+        small
+        center
+        onPress={() => {
+          navigation.navigate("Signin");
+        }}
+      >
         {" "}
-        Forget Password?
+        Sign In
       </Text>
     </ScrollView>
   );
 };
 
-const signin = StyleSheet.create({
+const signup = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f8f8f8",
@@ -114,4 +120,4 @@ const signin = StyleSheet.create({
   },
 });
 
-export default SignIn;
+export default SignUp;
