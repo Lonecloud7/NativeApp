@@ -3,11 +3,15 @@ import User from "../models/user";
 import { hashPassword, comparePassword } from "../helpers/auth";
 import jwt from "jsonwebtoken";
 import nanoid from "nanoid";
+import { SENDGRID_KEY } from "../config"
+import { JWT_SECRET } from "../config"
+import { EMAIL_FROM } from "../config"
+
 
 // sendgrid
 require("dotenv").config();
 const sgMail = require("@sendgrid/mail");
-sgMail.setApiKey(process.env.SENDGRID_KEY);
+sgMail.setApiKey(SENDGRID_KEY);
 
 export const signup = async (req, res) => {
   console.log("HIT SIGNUP");
@@ -45,12 +49,15 @@ export const signup = async (req, res) => {
         password: hashedPassword,
       }).save();
 
+      
       // create signed token
-      const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ _id: user._id },JWT_SECRET, {
         expiresIn: "7d",
       });
 
-      //   console.log(user);
+      // console.log(token);
+
+        
       const { password, ...rest } = user._doc;
       return res.json({
         token,
@@ -114,7 +121,7 @@ export const forgotPassword = async (req, res) => {
   user.save();
   // prepare email
   const emailData = {
-    from: process.env.EMAIL_FROM,
+    from:EMAIL_FROM,
     to: user.email,
     subject: "Password reset code",
     html: "<h1>Your password  reset code is: {resetCode}</h1>"

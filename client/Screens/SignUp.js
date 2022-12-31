@@ -2,6 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import axios from "axios";
+import { onlineAPI } from "../Config";
 // import { Text } from "react-native";
 import Text from "@kaloraat/react-native-text";
 import UserInput from "../Components/auth/UserInput";
@@ -10,9 +11,9 @@ import Logo from "../Components/auth/Logo";
 
 const SignUp = ({ navigation }) => {
   const [values, setValues] = useState({
-    name: "Okeke Dumaga",
-    email: "okekedumaga10@gmail.com",
-    password: "sjsnsksksks",
+    name: "jerry seinfeld",
+    email: "nativelover@gmail.com",
+    password: "cramercrazy",
   });
 
   const [loading, setLoading] = useState(false);
@@ -37,15 +38,20 @@ const SignUp = ({ navigation }) => {
 
     console.log("DATA IS =>", name, email, password);
     setLoading(false);
+
+    console.log(values);
     try {
-      const data = await axios.post("http://localHost:8000/api", {
-        name: name,
+      setLoading(true);
+      const data = await axios.post(`${onlineAPI}/signup`, {
+        name,
         email,
         password,
       });
 
-      alert("YOUR DATA IS IN MY NIGGA");
-      console.log("SUCCESS =>", data);
+      alert("YOUR DATA IS IN");
+      console.log("SUCCESS! THIS IS YOUR RESPONSE! =>", data);
+
+
       setLoading(false);
     } catch (err) {
       console.log(err);
