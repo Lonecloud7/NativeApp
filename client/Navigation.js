@@ -37,7 +37,7 @@ export default function Navigation() {
           <Stack.Screen
             name="Account"
             component={Accounts}
-            options={{ title: "Hip-Hop", headerRight: () => <Header /> }}
+            options={{ title: "Hip-Hop" }}
           />
           <Stack.Screen
             name="Post"

@@ -3,9 +3,9 @@ import User from "../models/user";
 import { hashPassword, comparePassword } from "../helpers/auth";
 import jwt from "jsonwebtoken";
 import nanoid from "nanoid";
-import { SENDGRID_KEY } from "../config"
-import { JWT_SECRET } from "../config"
-import { EMAIL_FROM } from "../config"
+import { SENDGRID_KEY } from "../ServerConfig"
+import { JWT_SECRET } from "../ServerConfig"
+import { EMAIL_FROM } from "../ServerConfig"
 
 
 // sendgrid

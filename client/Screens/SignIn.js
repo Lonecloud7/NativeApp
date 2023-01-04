@@ -14,8 +14,8 @@ const SignIn = ({ navigation }) => {
 
   const [state, setState] = useContext(AuthContext)
   const [values, setValues] = useState({
-    email: "jamesgunn@gmail.com",
-    password: "12345678",
+    email: "okeke.dumaga@gmail.com",
+    password: "zikora1997",
   });
 
   const [loading, setLoading] = useState(false);

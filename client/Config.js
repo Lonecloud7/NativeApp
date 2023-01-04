@@ -1,3 +1,3 @@
-export const onlineAPI = "https://whole-papers-leave-160-152-156-157.loca.lt/api";
+export const onlineAPI = "https://solid-jokes-push-160-119-127-116.loca.lt/api";
 
 export const localAPI = "http://localhost:8000/api";

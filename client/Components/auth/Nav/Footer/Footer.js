@@ -1,44 +1,53 @@
 import React, { useState } from "react";
 import { View, TouchableOpacity, StyleSheet } from "react-native";
 import FooterTabs from "./FooterTabs";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { Divider } from "react-native-elements";
 
 const Footer = () => {
   const navigation = useNavigation();
+  const route = useRoute()
   return (
-    <View style={Style.container}>
-      <View style={Style.tabs}>
-        <FooterTabs
-          title={"Home"}
-          icon={"home"}
-          navigation={navigation}
-          handlePress={() => {
-            navigation.navigate("Home");
-          }}
-        />
-        <FooterTabs
-          title={"Post"}
-          icon={"plus-square"}
-          handlePress={() => {
-            navigation.navigate("Post");
-          }}
-        />
-        <FooterTabs
-          title={"Links"}
-          icon={"list-ol"}
-          handlePress={() => {
-            navigation.navigate("Links");
-          }}
-        />
-        <FooterTabs
-          title={"Account"}
-          icon={"user"}
-          handlePress={() => {
-            navigation.navigate("Account");
-          }}
-        />
+    <>
+    <Divider width={5}/>
+      <View style={Style.container}>
+        <View style={Style.tabs}>
+          <FooterTabs
+            title={"Home"}
+            icon={"home"}
+            navigation={navigation}
+            handlePress={() => {
+              navigation.navigate("Home");
+            }}
+            route={route.name}
+          />
+          <FooterTabs
+            title={"Post"}
+            icon={"plus-square"}
+            handlePress={() => {
+              navigation.navigate("Post");
+            }}
+            route={route.name}
+          />
+          <FooterTabs
+            title={"Links"}
+            icon={"list-ol"}
+            handlePress={() => {
+              navigation.navigate("Links");
+            }}
+            route={route.name}
+          />
+          <FooterTabs
+            title={"Account"}
+            icon={"user"}
+            handlePress={() => {
+              navigation.navigate("Account");
+            }}
+            route={route.name}
+          />
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 

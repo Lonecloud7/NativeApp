@@ -70,7 +70,7 @@ const SignUp = ({ navigation }) => {
           password: "",
         });
         //redirect
-        navigation.navigate("Signin");
+        navigation.navigate("Home");
       }
     } catch (err) {
       console.log(err);
@@ -127,7 +127,7 @@ const SignUp = ({ navigation }) => {
         small
         center
         onPress={() => {
-          navigation.navigate("Signin");
+          navigation.navigate("Home");
         }}
       >
         {" "}

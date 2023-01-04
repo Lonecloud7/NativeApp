@@ -27,7 +27,6 @@ const HomeStyle = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f8f8f8",
-    justifyContent: "space-between",
   },
   content: {},
 });

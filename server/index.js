@@ -2,7 +2,7 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import { DATABASE } from "./config";
+import { DATABASE } from "./ServerConfig";
 
 import authRoutes from "./routes/auth";
 
