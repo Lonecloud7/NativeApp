@@ -1,22 +1,26 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 import axios from "axios";
-import { onlineAPI } from "../Config";
 // import { Text } from "react-native";
 import Text from "@kaloraat/react-native-text";
 import UserInput from "../Components/auth/UserInput";
 import SubmitButton from "../Components/auth/submitButton";
 import Logo from "../Components/auth/Logo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../context/contextAuth";
 
 const SignUp = ({ navigation }) => {
   const [values, setValues] = useState({
-    name: "jerry seinfeld",
-    email: "nativelover@gmail.com",
-    password: "cramercrazy",
+    name: "",
+    email: "",
+    password: "",
   });
 
   const [loading, setLoading] = useState(false);
+
+  //call context state
+  const [state, setState] = useContext(AuthContext);
 
   const { name, email, password } = values;
 
@@ -39,20 +43,35 @@ const SignUp = ({ navigation }) => {
     console.log("DATA IS =>", name, email, password);
     setLoading(false);
 
-    console.log(values);
     try {
       setLoading(true);
-      const data = await axios.post(`${onlineAPI}/signup`, {
+      //base url in context config
+      const { data } = await axios.post(`/signup`, {
         name,
         email,
         password,
       });
 
-      alert("YOUR DATA IS IN");
-      console.log("SUCCESS! THIS IS YOUR RESPONSE! =>", data);
+      if (data.error) {
+        alert(data.error);
+        setLoading(false);
+      } else {
+        // save in context
+        setState(data);
+        // save response to local storage
+        await AsyncStorage.setItem("@auth", JSON.stringify(data));
+        setLoading(false);
 
-
-      setLoading(false);
+        console.log("SUCCESS! THIS IS YOUR RESPONSE! =>", data);
+        alert("YOUR DATA IS IN");
+        setValues({
+          name: "",
+          email: "",
+          password: "",
+        });
+        //redirect
+        navigation.navigate("Signin");
+      }
     } catch (err) {
       console.log(err);
       setLoading(false);

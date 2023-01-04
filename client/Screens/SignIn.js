@@ -1,17 +1,21 @@
 import React from "react";
-import { useState } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import { useState, useContext } from "react";
+import { ScrollView, StyleSheet } from "react-native";
 import axios from "axios";
 // import { Text } from "react-native";
 import Text from "@kaloraat/react-native-text";
 import UserInput from "../Components/auth/UserInput";
 import SubmitButton from "../Components/auth/submitButton";
 import Logo from "../Components/auth/Logo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../context/contextAuth";
 
 const SignIn = ({ navigation }) => {
+
+  const [state, setState] = useContext(AuthContext)
   const [values, setValues] = useState({
-    email: "okekedumaga10@gmail.com",
-    password: "sjsnsksksks",
+    email: "jamesgunn@gmail.com",
+    password: "12345678",
   });
 
   const [loading, setLoading] = useState(false);
@@ -37,19 +41,40 @@ const SignIn = ({ navigation }) => {
     console.log("DATA IS =>", email, password);
     setLoading(false);
     try {
-      const data = await axios.post("http://localHost:8000/api", {
+      setLoading(true);
+      //base url in context config
+      const { data } = await axios.post(`/signin`, {
         email,
         password,
       });
 
-      alert("YOUR DATA IS FOUND MY NIGGA");
-      console.log("SUCCESS =>", data);
-      setLoading(false);
+      if (data.error) {
+        alert(data.error);
+        setLoading(false);
+      } else {
+        //save to context store
+
+        setState(data)
+        //save to local storage
+        await AsyncStorage.setItem("@auth", JSON.stringify(data));
+        alert("WELCOME BACK MAH NIGGA!!");
+        console.log("SUCCESS =>", data);
+        setLoading(false);
+        navigation.navigate("Home");
+      }
     } catch (err) {
       console.log(err);
+      alert(err);
       setLoading(false);
     }
   };
+
+  // const checkState = async () => {
+  //   const data = await AsyncStorage.getItem("@auth");
+  //   console.log("DATA FROM LOCAL STORAGE",data);
+  // };
+
+  // checkState();
 
   return (
     <ScrollView contentContainerStyle={signin.container}>
@@ -87,7 +112,7 @@ const SignIn = ({ navigation }) => {
       <Text small center>
         Create An Account?
         <Text
-          color="grey"  
+          color="grey"
           small
           center
           onPress={() => {
