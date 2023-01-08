@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import Text from "@kaloraat/react-native-text";
-import { SafeAreaView, View, StyleSheet, StatusBar } from "react-native";
+import { SafeAreaView, View, StyleSheet, StatusBar, Image } from "react-native";
 import { AuthContext } from "../context/contextAuth";
 import Footer from "../Components/auth/Nav/Footer/Footer";
 
@@ -17,6 +17,7 @@ const Home = ({navigation}) => {
           {state && state.user.name}
         </Text>
       </View>
+      
 
       <Footer />
     </SafeAreaView>

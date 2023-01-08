@@ -5,6 +5,7 @@ import Text from "@kaloraat/react-native-text";
 const Logo = ({ children }) => {
   return (
     <View style={signup.logo}>
+      <View style={signup.logoCircle}>
       {children ? (
         children
       ) : (
@@ -13,20 +14,36 @@ const Logo = ({ children }) => {
           style={signup.img}
         />
       )}
+      </View>
     </View>
   );
 };
 
 const signup = StyleSheet.create({
   logo: {
-    justifyContent: "center",
-    alignContent: "center",
-    padding: 30,
+    backgroundColor:"#c4c4c4",
+    height:250,
+    width:250,
+    borderRadius:100,
+    justifyContent:"center",
+    alignItems:"center",
+    alignSelf:"center",
+    padding: 15,
+    // backgroundColor:"red",
   },
-  img: {
-    width: 340,
-    height: 120,
-  },
+  // img: {
+  //   width: 340,
+  //   height: 120,
+  // },
+  logoCircle:{
+    // backgroundColor:"#c4c4c4",
+    // height:190,
+    // width:190,
+    borderRadius:100,
+    // justifyContent:"center",
+    // alignItems:"center",
+    alignSelf:"center"
+  }
 });
 
 export default Logo;

@@ -9,7 +9,7 @@ const Footer = () => {
   const route = useRoute()
   return (
     <>
-    <Divider width={5}/>
+    {/* <Divider width={5}/> */}
       <View style={Style.container}>
         <View style={Style.tabs}>
           <FooterTabs

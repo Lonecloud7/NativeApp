@@ -1,7 +1,8 @@
 import React, { useState, useEffect, createContext } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { onlineAPI } from "../Config";
+import { useNavigation } from "@react-navigation/native";
+// import { onlineAPI } from "../Config";
 
 const AuthContext = createContext();
 
@@ -11,9 +12,38 @@ const AuthProvider = ({ children }) => {
     token: "",
   });
 
+  //call Navigation
+
+  const navigation = useNavigation();
+
   //config axios
 
-  axios.defaults.baseURL = onlineAPI
+  //Base URL default
+  // axios.defaults.baseURL = onlineAPI
+  const token = state && state.token ? state.token : "";
+
+  //Base Header default
+  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+  //Handle expired token or 401 error
+  axios.interceptors.response.use(
+    async function (response) {
+      return response;
+    },
+    async function (error) {
+      let res = error.response;
+      if (res.status === 401 && res.config && !res.config.__isRetryRequest) {
+        await AsyncStorage.removeItem("@auth");
+
+        setState({
+          user: null,
+          token: "",
+        });
+
+        navigation.navigate("Signin");
+      }
+    }
+  );
 
   useEffect(() => {
     const loadLocalStorage = async () => {
@@ -31,9 +61,9 @@ const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider value={[state, setState]}>
-        {children}
+      {children}
     </AuthContext.Provider>
-  )
+  );
 };
 
 export { AuthProvider, AuthContext };

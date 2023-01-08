@@ -6,9 +6,10 @@ import axios from "axios";
 import Text from "@kaloraat/react-native-text";
 import UserInput from "../Components/auth/UserInput";
 import SubmitButton from "../Components/auth/submitButton";
-import Logo from "../Components/auth/Logo";
+import SignInLogo from "../Components/auth/signInLogo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../context/contextAuth";
+import { onlineAPI } from "../Config";
 
 const SignIn = ({ navigation }) => {
 
@@ -43,7 +44,7 @@ const SignIn = ({ navigation }) => {
     try {
       setLoading(true);
       //base url in context config
-      const { data } = await axios.post(`/signin`, {
+      const { data } = await axios.post(`${onlineAPI}/signin`, {
         email,
         password,
       });
@@ -57,7 +58,7 @@ const SignIn = ({ navigation }) => {
         setState(data)
         //save to local storage
         await AsyncStorage.setItem("@auth", JSON.stringify(data));
-        alert("WELCOME BACK MAH NIGGA!!");
+        // alert("WELCOME BACK MAH NIGGA!!");
         console.log("SUCCESS =>", data);
         setLoading(false);
         navigation.navigate("Home");
@@ -78,7 +79,7 @@ const SignIn = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={signin.container}>
-      <Logo />
+      <SignInLogo />
       <Text title center>
         {" "}
         SIGN IN

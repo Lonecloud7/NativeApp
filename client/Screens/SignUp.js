@@ -6,9 +6,10 @@ import axios from "axios";
 import Text from "@kaloraat/react-native-text";
 import UserInput from "../Components/auth/UserInput";
 import SubmitButton from "../Components/auth/submitButton";
-import Logo from "../Components/auth/Logo";
+import SignInLogo from "../Components/auth/signInLogo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../context/contextAuth";
+import { onlineAPI } from "../Config";
 
 const SignUp = ({ navigation }) => {
   const [values, setValues] = useState({
@@ -46,7 +47,7 @@ const SignUp = ({ navigation }) => {
     try {
       setLoading(true);
       //base url in context config
-      const { data } = await axios.post(`/signup`, {
+      const { data } = await axios.post(`${onlineAPI}/signup`, {
         name,
         email,
         password,
@@ -80,7 +81,7 @@ const SignUp = ({ navigation }) => {
 
   return (
     <ScrollView contentContainerStyle={signup.container}>
-      <Logo />
+      <SignInLogo />
       <Text title center>
         {" "}
         SIGN UP
@@ -127,7 +128,7 @@ const SignUp = ({ navigation }) => {
         small
         center
         onPress={() => {
-          navigation.navigate("Home");
+          navigation.navigate("Home" && "Signin");
         }}
       >
         {" "}

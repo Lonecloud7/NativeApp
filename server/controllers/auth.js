@@ -1,17 +1,36 @@
-
 import User from "../models/user";
 import { hashPassword, comparePassword } from "../helpers/auth";
 import jwt from "jsonwebtoken";
 import nanoid from "nanoid";
-import { SENDGRID_KEY } from "../ServerConfig"
-import { JWT_SECRET } from "../ServerConfig"
-import { EMAIL_FROM } from "../ServerConfig"
 
+//Config file containes private APIs, so it's in gitignore
+import { SENDGRID_KEY } from "../ServerConfig";
+import { JWT_SECRET } from "../ServerConfig";
+import { IMG_CLOUD_NAME } from "../ServerConfig";
+import { IMG_API_KEY } from "../ServerConfig";
+import { IMG_API_SECRET } from "../ServerConfig";
+import { IMG_API_ENVI_VARIABLE } from "../ServerConfig";
+
+const expressJWT = require("express-jwt");
+const cloudinary = require("cloudinary");
 
 // sendgrid
 require("dotenv").config();
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(SENDGRID_KEY);
+
+//cloudinary
+
+cloudinary.config({
+  cloud_name: IMG_CLOUD_NAME,
+  api_key: IMG_API_KEY,
+  api_secret: IMG_API_SECRET,
+});
+//middleware
+export const requireSignin = expressJWT({
+  secret: JWT_SECRET,
+  algorithms: ["HS256"],
+});
 
 export const signup = async (req, res) => {
   console.log("HIT SIGNUP");
@@ -49,15 +68,13 @@ export const signup = async (req, res) => {
         password: hashedPassword,
       }).save();
 
-      
       // create signed token
-      const token = jwt.sign({ _id: user._id },JWT_SECRET, {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: "7d",
       });
 
       // console.log(token);
 
-        
       const { password, ...rest } = user._doc;
       return res.json({
         token,
@@ -121,10 +138,10 @@ export const forgotPassword = async (req, res) => {
   user.save();
   // prepare email
   const emailData = {
-    from:EMAIL_FROM,
+    from: EMAIL_FROM,
     to: user.email,
     subject: "Password reset code",
-    html: "<h1>Your password  reset code is: {resetCode}</h1>"
+    html: "<h1>Your password  reset code is: {resetCode}</h1>",
   };
   // send email
   try {
@@ -160,5 +177,20 @@ export const resetPassword = async (req, res) => {
     return res.json({ ok: true });
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const uploadImage = async (req, res) => {
+  console.log("upload Image BODY --->>", req.body.image);
+
+  try {
+    const result = await cloudinary.uploader.upload(req.body.image, {
+      public_id: nanoid(),
+      resource_type: "jpeg",
+    });
+
+    console.log("CLOUDINARY RESULT ==>>", result);
+  } catch (err) {
+    console.log("IMAGE ERROR HERE ==>>", err);
   }
 };

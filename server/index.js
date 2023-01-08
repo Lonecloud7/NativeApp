@@ -1,7 +1,8 @@
-
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
+
+//Config file containes private APIs, so it's in gitignore
 import { DATABASE } from "./ServerConfig";
 
 import authRoutes from "./routes/auth";
