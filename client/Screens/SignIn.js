@@ -12,11 +12,10 @@ import { AuthContext } from "../context/contextAuth";
 import { onlineAPI } from "../Config";
 
 const SignIn = ({ navigation }) => {
-
-  const [state, setState] = useContext(AuthContext)
+  const [state, setState] = useContext(AuthContext);
   const [values, setValues] = useState({
     email: "okeke.dumaga@gmail.com",
-    password: "zikora1997",
+    password: "123456789",
   });
 
   const [loading, setLoading] = useState(false);
@@ -55,7 +54,7 @@ const SignIn = ({ navigation }) => {
       } else {
         //save to context store
 
-        setState(data)
+        setState(data);
         //save to local storage
         await AsyncStorage.setItem("@auth", JSON.stringify(data));
         // alert("WELCOME BACK MAH NIGGA!!");
@@ -103,9 +102,10 @@ const SignIn = ({ navigation }) => {
       />
 
       <SubmitButton
-        title="Submit"
+        title="Sign in"
         handleSubmit={handleSubmit}
         loading={loading}
+        loadingText={"Chill Mah Nigga..."}
       />
 
       {/* <Text>{JSON.stringify({ name, email, password }, null, 4)}</Text> */}
@@ -124,7 +124,14 @@ const SignIn = ({ navigation }) => {
           Sign Up
         </Text>
       </Text>
-      <Text color="grey" small center>
+      <Text
+        color="grey"
+        small
+        center
+        onPress={() => {
+          navigation.navigate("Forgotpassword");
+        }}
+      >
         {" "}
         Forget Password?
       </Text>

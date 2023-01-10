@@ -6,8 +6,10 @@ import SignIn from "./Screens/SignIn";
 import Home from "./Screens/Home";
 import Links from "./Screens/Links";
 import Posts from "./Screens/Posts";
+import ForgotPassword from "./Screens/ForgotPassword";
 import Accounts from "./Screens/Accounts";
 import Header from "./Components/auth/Nav/Header/Header";
+import PostLinks from "./Screens/PostLinks";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +21,7 @@ export default function Navigation() {
   const authenticated = state && state.token !== "" && state.user != null;
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="Signin"
       // screenOptions={{ headerShown: false }}
     >
       {authenticated ? (
@@ -32,7 +34,11 @@ export default function Navigation() {
           <Stack.Screen
             name="Links"
             component={Links}
-            options={{ title: "Hip-Hop", headerBackTitle:"Back",headerRight: () => <Header />}}
+            options={{
+              title: "Hip-Hop",
+              headerBackTitle: "Back",
+              headerRight: () => <Header />,
+            }}
           />
           <Stack.Screen
             name="Account"
@@ -48,6 +54,11 @@ export default function Navigation() {
       ) : (
         <>
           <Stack.Screen
+            name="Postlinks"
+            component={PostLinks}
+            options={{ title: "Post Links", headerRight: () => <Header /> }}
+          />
+          <Stack.Screen
             name="Signin"
             component={SignIn}
             options={{ headerShown: false }}
@@ -57,10 +68,13 @@ export default function Navigation() {
             component={SignUp}
             options={{ headerShown: false }}
           />
+          <Stack.Screen
+            name="Forgotpassword"
+            component={ForgotPassword}
+            options={{ headerShown: true }}
+          />
         </>
       )}
     </Stack.Navigator>
   );
-
-  // return <SignIn />;
 }

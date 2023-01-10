@@ -2,11 +2,16 @@ import React from "react";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import Text from "@kaloraat/react-native-text";
 
-const SubmitButton = ({ title, handleSubmit, loading }) => {
+const SubmitButton = ({
+  title,
+  handleSubmit,
+  loading,
+  loadingText = "loading...",
+}) => {
   return (
     <TouchableOpacity onPress={handleSubmit} style={signup.button}>
       <Text bold medium center color={"white"}>
-        {loading ? "Chill Mah Nigga..." : title}
+        {loading ? loadingText : title}
       </Text>
     </TouchableOpacity>
   );

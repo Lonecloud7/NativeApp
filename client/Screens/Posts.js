@@ -1,18 +1,32 @@
 import React, { useContext, useState } from "react";
 import Text from "@kaloraat/react-native-text";
-import { SafeAreaView, View, StyleSheet, StatusBar } from "react-native";
+import {
+  SafeAreaView,
+  View,
+  StyleSheet,
+  StatusBar,
+  Image,
+  TextInput,
+} from "react-native";
 import { AuthContext } from "../context/contextAuth";
 import Footer from "../Components/auth/Nav/Footer/Footer";
+import SubmitButton from "../Components/auth/submitButton";
 
-const Posts = ({navigation}) => {
+const Posts = ({ navigation }) => {
   const [state, useState] = useContext(AuthContext);
-
+  const { user } = state;
+  // const [loader, setLoader] = useState(false);
   return (
     <SafeAreaView style={SafeViewAndroid.AndroidSafeArea}>
       <View style={Style.container}>
-        <Text title center>
-          WELCOME TO Posts {state && state.user.name}
+        <Text large light center>
+          Post Links Here
         </Text>
+        <Text title center>
+          {user && user.name}
+        </Text>
+        <TextInput style={Style.input} />
+        <SubmitButton title={"Post"} />
       </View>
 
       <Footer />
@@ -24,9 +38,11 @@ const Style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f8f8f8",
-    justifyContent: "space-between",
   },
   content: {},
+  input:{
+
+  }
 });
 
 const SafeViewAndroid = StyleSheet.create({

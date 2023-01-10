@@ -35,7 +35,11 @@ const Accounts = ({ navigation }) => {
 
   const [uloadImg, setUploadImg] = useState("");
 
-  const [loader, setLoader] = useState(false);
+  const [loader, setLoader] = useState({
+    pictureLoading: false,
+    buttonLoading: false,
+    buttonLoading2: false,
+  });
 
   useEffect(() => {
     if (state) {
@@ -57,12 +61,36 @@ const Accounts = ({ navigation }) => {
   const { name, email, role, password, image } = currentUser;
 
   const LogOut = async () => {
+    setLoader({ ...loader, buttonLoading2: true });
     setState({
       token: "",
       user: null,
     });
 
     await AsyncStorage.removeItem("@auth");
+  };
+
+  const changePassword = async () => {
+    setLoader({ ...loader, buttonLoading: true });
+
+    try {
+      const { data } = await axios.post(`${onlineAPI}/Update-password`, {
+        password,
+      });
+
+      if (data.error) {
+        alert(data.error);
+        setLoader({ ...loader, buttonLoading: false });
+      } else {
+        setLoader(false);
+        alert("password changed");
+        setCurrentUser({...currentUser, password:""});
+      }
+    } catch (err) {
+      alert("password failed to update");
+      console.log(err);
+      setLoader({ ...loader, buttonLoading: false });
+    }
   };
 
   const handleUpload = async () => {
@@ -86,7 +114,7 @@ const Accounts = ({ navigation }) => {
       if (pickerResult.canceled === true) {
         return;
       } else {
-        setLoader(true);
+        setLoader({ ...loader, pictureLoading: true });
 
         let base64 = `data:image/jpg;base64,${pickerResult.assets[0].base64}`;
         setUploadImg(base64);
@@ -109,10 +137,10 @@ const Accounts = ({ navigation }) => {
 
           setState({ ...state, user: data });
 
-          setLoader(false);
+          setLoader({ ...loader, pictureLoading: false });
         } catch (err) {
           console.log("IMAGE UPLOAD FAILED ==>>>", err);
-          setLoader(false);
+          setLoader({ ...loader, pictureLoading: false });
         }
       }
     }
@@ -136,7 +164,11 @@ const Accounts = ({ navigation }) => {
             <FontAwesome5Icon name={"camera"} size={40} style={style.img} />
           </TouchableOpacity>
         )}
-        {image && image.url ? (
+        {loader.pictureLoading ? (
+          <Text medium center>
+            Loading...
+          </Text>
+        ) : image && image.url ? (
           <TouchableOpacity
             style={{
               padding: 10,
@@ -167,12 +199,21 @@ const Accounts = ({ navigation }) => {
         label={"Password"}
         name={"password"}
         autoCompleteType={"password"}
+        value={password}
         keyBoardType="email-address"
         onChange={onChange}
       />
 
-      <SubmitButton title="Submit" />
-      <SubmitButton title="Log out" handleSubmit={LogOut} />
+      <SubmitButton
+        title="Change Password"
+        loading={loader.buttonLoading}
+        handleSubmit={changePassword}
+      />
+      <SubmitButton
+        title="Log out"
+        handleSubmit={LogOut}
+        loading={loader.buttonLoading2}
+      />
     </ScrollView>
   );
 };

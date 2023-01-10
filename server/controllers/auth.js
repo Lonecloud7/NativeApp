@@ -10,6 +10,7 @@ import { IMG_CLOUD_NAME } from "../ServerConfig";
 import { IMG_API_KEY } from "../ServerConfig";
 import { IMG_API_SECRET } from "../ServerConfig";
 import { IMG_API_ENVI_VARIABLE } from "../ServerConfig";
+import { EMAIL_FROM } from "../ServerConfig";
 import user from "../models/user";
 
 const expressJWT = require("express-jwt");
@@ -142,12 +143,12 @@ export const forgotPassword = async (req, res) => {
     from: EMAIL_FROM,
     to: user.email,
     subject: "Password reset code",
-    html: "<h1>Your password  reset code is: {resetCode}</h1>",
+    html: `<h1>Your password  reset code is: ${resetCode}</h1>`,
   };
   // send email
   try {
     const data = await sgMail.send(emailData);
-    console.log(data);
+    console.log("RESPONSE FROM SGMAIL ===>>>", data);
     res.json({ ok: true });
   } catch (err) {
     console.log(err);
@@ -182,7 +183,7 @@ export const resetPassword = async (req, res) => {
 };
 
 export const uploadImage = async (req, res) => {
-  // console.log("upload Image BODY --->>", req.body);
+  console.log("upload Image BODY --->>", req.user);
 
   try {
     const result = await cloudinary.uploader.upload(req.body.image, {
@@ -213,5 +214,31 @@ export const uploadImage = async (req, res) => {
     });
   } catch (err) {
     console.log("IMAGE ERROR HERE ==>>", err);
+  }
+};
+
+export const updatePassword = async (req, res) => {
+  console.log("PERSONAL TEST +++>>.", req.user);
+  try {
+    const { password } = req.body;
+    if (!password && password.length < 6) {
+      return res.json({
+        error: "password is required and should be min 6 characters long",
+      });
+    } else {
+      //update password in db
+
+      const hashedPassword = await hashPassword(password);
+
+      const user = await User.findByIdAndUpdate(req.user._id, {
+        password: hashedPassword,
+      });
+
+      user.password = undefined;
+      user.secret = undefined;
+      return res.json(user);
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
