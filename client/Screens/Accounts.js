@@ -26,8 +26,8 @@ const Accounts = ({ navigation }) => {
     name: "",
     email: "",
     image: {
-      url: "",
       public_id: "",
+      url: "",
     },
     role: "",
     password: "",
@@ -35,20 +35,24 @@ const Accounts = ({ navigation }) => {
 
   const [uloadImg, setUploadImg] = useState("");
 
+  const [loader, setLoader] = useState(false);
+
   useEffect(() => {
     if (state) {
-      const { name, email, role } = state.user;
+      const { name, email, role, image } = state.user;
 
+      //add user from context into user displayed in currentUser
       setCurrentUser((prev) => {
         return {
           ...prev,
           name,
           email,
           role,
+          image,
         };
       });
     }
-  }, []);
+  }, [state]);
 
   const { name, email, role, password, image } = currentUser;
 
@@ -71,31 +75,44 @@ const Accounts = ({ navigation }) => {
     } else {
       //get image from device
       let pickerResult = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        // mediaTypes: ImagePicker.MediaTypeOptions.All,
         allowsEditing: true,
         aspect: [4, 3],
+        base64: true,
         quality: 1,
       });
-      // console.log("PICKER RESULT ==>>", pickerResult);
+      // console.log("PICKER RESULT ==>>", pickerResult.assets[0]);
 
       if (pickerResult.canceled === true) {
         return;
       } else {
-        setUploadImg(pickerResult.assets[0].uri);
+        setLoader(true);
+
+        let base64 = `data:image/jpg;base64,${pickerResult.assets[0].base64}`;
+        setUploadImg(base64);
         //send to backend for upload
 
         try {
           const { data } = await axios.post(
             `${onlineAPI}/upload-image`,
             {
-              image: pickerResult.assets[0].uri,
+              image: base64,
             }
             //Token and headers are sent as default in ContextAuth File
           );
           console.log("UPLOADED RESPONSE", data);
           //update user info in the context and async storage
+
+          const auth = JSON.parse(await AsyncStorage.getItem("@auth")); // user and token to update user
+          auth.user = data;
+          await AsyncStorage.setItem("@auth", JSON.stringify(auth));
+
+          setState({ ...state, user: data });
+
+          setLoader(false);
         } catch (err) {
           console.log("IMAGE UPLOAD FAILED ==>>>", err);
+          setLoader(false);
         }
       }
     }

@@ -10,6 +10,7 @@ import { IMG_CLOUD_NAME } from "../ServerConfig";
 import { IMG_API_KEY } from "../ServerConfig";
 import { IMG_API_SECRET } from "../ServerConfig";
 import { IMG_API_ENVI_VARIABLE } from "../ServerConfig";
+import user from "../models/user";
 
 const expressJWT = require("express-jwt");
 const cloudinary = require("cloudinary");
@@ -181,7 +182,7 @@ export const resetPassword = async (req, res) => {
 };
 
 export const uploadImage = async (req, res) => {
-  console.log("upload Image BODY --->>", req.body.image);
+  // console.log("upload Image BODY --->>", req.body);
 
   try {
     const result = await cloudinary.uploader.upload(req.body.image, {
@@ -189,7 +190,27 @@ export const uploadImage = async (req, res) => {
       resource_type: "jpeg",
     });
 
-    console.log("CLOUDINARY RESULT ==>>", result);
+    // console.log("CLOUDINARY RESULT ==>>", result);
+    //add user to database with a model
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      {
+        image: {
+          public_id: result.public_id,
+          url: result.secure_url,
+        },
+      },
+      { new: true }
+    );
+
+    //send response
+    return res.json({
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      image: user.image,
+    });
   } catch (err) {
     console.log("IMAGE ERROR HERE ==>>", err);
   }
