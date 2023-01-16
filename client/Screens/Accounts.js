@@ -84,7 +84,7 @@ const Accounts = ({ navigation }) => {
       } else {
         setLoader(false);
         alert("password changed");
-        setCurrentUser({...currentUser, password:""});
+        setCurrentUser({ ...currentUser, password: "" });
       }
     } catch (err) {
       alert("password failed to update");
@@ -109,7 +109,7 @@ const Accounts = ({ navigation }) => {
         base64: true,
         quality: 1,
       });
-      // console.log("PICKER RESULT ==>>", pickerResult.assets[0]);
+      console.log("PICKER RESULT ==>>", pickerResult.assets[0]);
 
       if (pickerResult.canceled === true) {
         return;
@@ -153,78 +153,89 @@ const Accounts = ({ navigation }) => {
     });
   };
   return (
-    <ScrollView contentContainerStyle={style.container}>
-      <Logo>
-        {image && image.url ? (
-          <Image source={{ uri: image.url }} style={style.img} />
-        ) : uloadImg ? (
-          <Image source={{ uri: uloadImg }} style={style.img} />
-        ) : (
-          <TouchableOpacity onPress={handleUpload}>
-            <FontAwesome5Icon name={"camera"} size={40} style={style.img} />
-          </TouchableOpacity>
-        )}
-        {loader.pictureLoading ? (
-          <Text medium center>
-            Loading...
-          </Text>
-        ) : image && image.url ? (
-          <TouchableOpacity
-            style={{
-              padding: 10,
-              backgroundColor: "#f6f6f6",
-              borderRadius: 100,
-              alignSelf: "center",
-            }}
-            onPress={handleUpload}
-          >
-            <FontAwesome5Icon name={"camera"} size={25} />
-          </TouchableOpacity>
-        ) : (
-          <></>
-        )}
-      </Logo>
+    <SafeAreaView style={SafeViewAndroid.AndroidSafeArea}>
+      <ScrollView contentContainerStyle={style.container}>
+        <Logo>
+          {image && image.url ? (
+            <Image source={{ uri: image.url }} style={style.img} />
+          ) : uloadImg ? (
+            <Image source={{ uri: uloadImg }} style={style.img} />
+          ) : (
+            <TouchableOpacity onPress={handleUpload}>
+              <FontAwesome5Icon name={"camera"} size={40} style={style.img} />
+            </TouchableOpacity>
+          )}
+          {loader.pictureLoading ? (
+            <Text medium center>
+              Loading...
+            </Text>
+          ) : image && image.url ? (
+            <TouchableOpacity
+              style={{
+                padding: 10,
+                backgroundColor: "#f6f6f6",
+                borderRadius: 100,
+                alignSelf: "center",
+              }}
+              onPress={handleUpload}
+            >
+              <FontAwesome5Icon name={"camera"} size={25} />
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
+        </Logo>
 
-      <Text title center>
-        {currentUser.name}
-      </Text>
-      <Text medium center>
-        {currentUser.email}
-      </Text>
-      <Text light center>
-        {currentUser.role}
-      </Text>
+        <Text title center>
+          {currentUser.name}
+        </Text>
+        <Text medium center>
+          {currentUser.email}
+        </Text>
+        <Text light center>
+          {currentUser.role}
+        </Text>
 
-      <UserInput
-        label={"Password"}
-        name={"password"}
-        autoCompleteType={"password"}
-        value={password}
-        keyBoardType="email-address"
-        onChange={onChange}
-      />
+        <UserInput
+          label={"Password"}
+          name={"password"}
+          autoCompleteType={"password"}
+          value={password}
+          keyBoardType="email-address"
+          onChange={onChange}
+        />
 
-      <SubmitButton
-        title="Change Password"
-        loading={loader.buttonLoading}
-        handleSubmit={changePassword}
-      />
-      <SubmitButton
-        title="Log out"
-        handleSubmit={LogOut}
-        loading={loader.buttonLoading2}
-      />
-    </ScrollView>
+        <SubmitButton
+          title="Change Password"
+          loading={loader.buttonLoading}
+          handleSubmit={changePassword}
+        />
+        <SubmitButton
+          title="Log out"
+          handleSubmit={LogOut}
+          loading={loader.buttonLoading2}
+        />
+        
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const style = StyleSheet.create({
   container: {
-    flex: 1,
+    // flex: 1,
     backgroundColor: "#f8f8f8",
     justifyContent: "center",
   },
   img: { height: 190, width: 190, borderRadius: 100 },
+});
+
+const SafeViewAndroid = StyleSheet.create({
+  AndroidSafeArea: {
+    flex: 1,
+    backgroundColor: "white",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
 });
 
 export default Accounts;
